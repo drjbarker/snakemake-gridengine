@@ -1,0 +1,3 @@
+__default__:
+  output: logs/sge/{cluster.rule}_{cluster.jobid}.log
+  error: logs/sge/{cluster.rule}_{cluster.jobid}.log
