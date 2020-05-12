@@ -111,7 +111,13 @@ def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mappin
         for rkey, rval in resource_mapping.items():
             if skey in rval:
                 found = True
-                job_options["resources"].update({rkey : sval})
+                # Snakemake resources can only be defined as integers, but SGE interprets
+                # plain integers for memory as bytes. This hack means we interpret memory
+                # requests as gigabytes
+                if (rkey == 's_vmem') or (rkey == 'h_vmem'):
+                    job_options["resources"].update({rkey : str(sval) + 'G'})
+                else:
+                    job_options["resources"].update({rkey : sval})
                 break
         if found: continue
         for okey, oval in option_mapping.items():
