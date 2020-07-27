@@ -26,6 +26,7 @@ CLUSTER_CONFIG = "cluster.yaml"
 # jobscript
 
 OPTION_MAPPING = {
+    "binding": ("binding",),
     "cwd"    : ("cwd",),
     "e"      : ("e", "error"),
     "hard"   : ("hard",),
@@ -75,9 +76,11 @@ RESOURCE_MAPPING = {
     "h_vmem"           : ("h_vmem", "mem", "memory", "virtual_memory"),
     "s_fsize"          : ("s_fsize", "soft_file_size"),
     "h_fsize"          : ("h_fsize", "file_size"),
-    # custom
+    # custom resources on ARC4
     "nodes"            : ("nodes", "np"),
-    "coproc_v100"      : ("coproc_v100", "gpu")
+    "ppn"              : ("ppn", "processors_per_node"),
+    "coproc_v100"      : ("coproc_v100", "gpu"),
+    "node_type"        : ("node_type",)
 }
 
 
