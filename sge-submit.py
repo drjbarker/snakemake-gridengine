@@ -26,6 +26,7 @@ CLUSTER_CONFIG = "cluster.yaml"
 # jobscript
 
 OPTION_MAPPING = {
+    "binding": ("binding",),
     "cwd"    : ("cwd",),
     "e"      : ("e", "error"),
     "hard"   : ("hard",),
