@@ -40,6 +40,7 @@ To allow more expressive resource requests we map some simple names to the SGE o
 
 | SGE Option       | Accepted YAML key names                   |
 | -----------------|-------------------------------------------| 
+| binding          | binding                                   |
 | cwd              | cwd,                                      |
 | e                | e, error                                  |
 | hard             | hard,                                     |
@@ -85,4 +86,4 @@ To allow more expressive resource requests we map some simple names to the SGE o
 | h_fsize          | h_fsize, file_size                        |
 | nodes            | nodes, np                                 |
 | coproc_v100      | coproc_v100, gpu                          |
-
+| node_type        | node_type                                 |
