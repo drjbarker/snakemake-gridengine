@@ -79,7 +79,8 @@ RESOURCE_MAPPING = {
     # custom resources on ARC4
     "nodes"            : ("nodes", "np"),
     "ppn"              : ("ppn", "processors_per_node"),
-    "coproc_v100"      : ("coproc_v100", "gpu")
+    "coproc_v100"      : ("coproc_v100", "gpu"),
+    "node_type"        : ("node_type",)
 }
 
 
