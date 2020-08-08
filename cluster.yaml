@@ -1,5 +1,5 @@
 __default__:
   runtime: "48:0:0"
   join: yes
-  output: logs/sge/{cluster.rule}_{cluster.jobid}.log
-  error: logs/sge/{cluster.rule}_{cluster.jobid}.log
+  output: logs/sge/snakejob.{rulename}.{jobid}.log
+  error: logs/sge/snakejob.{rulename}.{jobid}.log

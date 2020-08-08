@@ -103,6 +103,12 @@ def parse_qsub_defaults(parsed):
             options[arg.strip("-")] = ""
     return options
 
+def format_job_properties(string):
+    # we use 'rulename' rather than 'rule' for consistency with the --cluster-config 
+    # snakemake option
+    return string.format(rulename=job_properties['rule'], jobid=job_properties['jobid'])
+
+
 def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mapping=OPTION_MAPPING):
     job_options = { "options" : {}, "resources" : {}}
 
@@ -159,8 +165,7 @@ def sge_option_string(key, val):
         return f"-{key}"
     if type(val) == bool:
         return f"-{key} " + ("yes" if val else "no")
-    return f"-{key} {val}"
-
+    return format_job_properties(f"-{key} {val}")
 
 def sge_resource_string(key, val):
     if val == "":
