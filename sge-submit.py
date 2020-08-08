@@ -106,9 +106,6 @@ def parse_qsub_defaults(parsed):
 def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mapping=OPTION_MAPPING):
     job_options = { "options" : {}, "resources" : {}}
 
-    if type(source) != dict:
-        return job_options
-
     for skey, sval in source.items():
         found = False
         for rkey, rval in resource_mapping.items():
