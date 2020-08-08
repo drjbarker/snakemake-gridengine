@@ -14,7 +14,7 @@ from snakemake import io
 from snakemake.utils import read_job_properties
 
 DEFAULT_JOB_NAME = "snakemake_job"
-QSUB_DEFAULTS = "-cwd -V -j"
+QSUB_DEFAULTS = "-cwd -V"
 CLUSTER_CONFIG = "cluster.yaml"
 
 # SGE syntax for options is `-option [value]` and for resources is `-l name=value`
