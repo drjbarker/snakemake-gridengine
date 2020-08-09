@@ -76,13 +76,27 @@ RESOURCE_MAPPING = {
     "h_vmem"           : ("h_vmem", "mem", "memory", "virtual_memory"),
     "s_fsize"          : ("s_fsize", "soft_file_size"),
     "h_fsize"          : ("h_fsize", "file_size"),
-    # custom resources on ARC4
-    "nodes"            : ("nodes", "np"),
-    "ppn"              : ("ppn", "processors_per_node"),
-    "coproc_v100"      : ("coproc_v100", "gpu"),
-    "node_type"        : ("node_type",)
 }
 
+def add_custom_resources(resources, resource_mapping=RESOURCE_MAPPING):
+    """Adds new resources to resource_mapping.
+
+       resources -> dict where key is sge resource name and value is a 
+                    single name or a list of names to be used as aliased
+    """
+    for key, val in resources.items():
+        if key not in resource_mapping:
+            resource_mapping[key] = tuple()
+
+        # make sure the resource name itself is an alias
+        resource_mapping[key] += (key,)
+        if isinstance(val, list):
+            for alias in val:
+                if val != key:
+                    resource_mapping[key] += (alias,)
+        else:
+            if val != key:
+                resource_mapping[key] += (val,)
 
 def parse_jobscript():
     """Minimal CLI to require/only accept single positional argument."""
@@ -197,6 +211,8 @@ job_properties = read_job_properties(jobscript)
 
 # load the default cluster config
 cluster_config = load_cluster_config(CLUSTER_CONFIG)
+
+add_custom_resources(cluster_config["__resources__"])
 
 # qsub default arguments
 update_double_dict(qsub_settings, parse_qsub_settings(parse_qsub_defaults(QSUB_DEFAULTS)))
