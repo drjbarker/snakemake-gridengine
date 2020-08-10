@@ -13,6 +13,10 @@ Additional cluster options (including complex resources) can be given in a local
 
 On Linux, place the files into `~/.config/snakemake/sge` for snakemake to automatically find the profile.
 
+The `cluster.yaml` file in the profile directory should be modified to setup your default settings (applied to all rules but can be overwritten) and custom resources.
+
+Custom SGE resources are specified in `__resources__` only in the profile folder (i.e. ones in a local `--cluster-config cluster.yaml` will be ignored). They are given as a YAML dictionary where the key is the resource name as defined in SGE and the values are any aliases you want to use for this resource. The key will always be avaiable as a name even if you don't specifiy it as an alias. If a key already exists in the resource list the the aliases are just appended to that resource. Examples are given in the provided `cluster.yaml` (from arc4 at Leeds).
+
 ## Usage
 
 To use the profile (i.e. to submit tasks as jobs on in an SGE queue) use:
@@ -84,6 +88,3 @@ To allow more expressive resource requests we map some simple names to the SGE o
 | h_vmem           | h_vmem, mem, memory,  virtual_memory      | 
 | s_fsize          | s_fsize, soft_file_size                   |
 | h_fsize          | h_fsize, file_size                        |
-| nodes            | nodes, np                                 |
-| coproc_v100      | coproc_v100, gpu                          |
-| node_type        | node_type                                 |
