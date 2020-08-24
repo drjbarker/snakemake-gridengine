@@ -1,48 +1,66 @@
-# gridengine
-
-This is written for the arc4 cluster at the University of Leeds, but should be general enough to work in most SGE setups.
+# sge
 
 This profile configures [Snakemake](https://snakemake.readthedocs.io/en/stable/) to run on (Sun) Grid Engine.
 
-- `config.yaml` contains default arguments for the profile
-- `cluster.yaml` contains default options for grid engine’s qsub
+## Setup
 
-Additional cluster options (including complex resources) can be given in a local yaml file using Snakemake’s `--cluster-config` flag. This also allows per-rule options. Example use cases would be when a certain rule needs to run in a certain queue or under a certain project or you want to use a complex resource which may not exist in other SGE configurations.
+### Deploy profile
 
-## Installation
+To deploy this profile, run
 
-On Linux, place the files into `~/.config/snakemake/sge` for snakemake to automatically find the profile.
+	mkdir -p ~/.config/snakemake
+	cd ~/.config/snakemake
+	cookiecutter https://github.com/drjbarker/snakemake-gridengine.git
+  
+  
+Then, you can run Snakemake with
 
-The `cluster.yaml` file in the profile directory should be modified to setup your default settings (applied to all rules but can be overwritten) and custom resources.
+	snakemake --profile sge ...
+  
+### Cookiecutter options
 
-Custom SGE resources are specified in `__resources__` only in the profile folder (i.e. ones in a local `--cluster-config cluster.yaml` will be ignored). They are given as a YAML dictionary where the key is the resource name as defined in SGE and the values are any aliases you want to use for this resource. The key will always be avaiable as a name even if you don't specifiy it as an alias. If a key already exists in the resource list the the aliases are just appended to that resource. Examples are given in the provided `cluster.yaml` (from arc4 at Leeds).
+* `profile_name` : A name to address the profile via the `--profile` Snakemake option.
+* `cluster_config` : Path to a YAML or JSON configuration file analogues to the
+  Snakemake [`--cluster-config` option](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#cluster-configuration-deprecated).
+  This is also used to define custom resources on the SGE cluster.
+  
+### Default snakemake arguments
+Default arguments to ``snakemake`` maybe adjusted in the ``<profile path>/config.yaml`` file.
 
-## Usage
+## Parsing arguments to SGE (qsub)
+Arguments are overridden in the following order, aliases are also defined and can be defined :
 
-To use the profile (i.e. to submit tasks as jobs on in an SGE queue) use:
-
-`snakemake --profile sge`
-
-To also use a local `cluster.yaml` file in your working directory use;
-
-`snakemake --profile sge --cluster-config cluster.yaml`
-
-## qsub options
-
-The options are read and overwritten in the following order:
-
-1. Default options in `sge-submit.py`
-2. Default options in the profile’s `cluster.yaml` file
-3. Resources specified for the rule in the Snakemake file
-4. Rule specific options in the profile’s `cluster.yaml` file
-5. Default and rule specific options in the cluster config pass with `--cluster-config`
+1) `QSUB_DEFAULTS` in `sge-submit.py`
+2) Profile `cluster_config` file `__default__` entries
+3) Snakefile threads and resources (time, mem)
+4) Profile `cluster_config` file <rulename> entries
+5) `--cluster-config` parsed to Snakemake (deprecated since Snakemake 5.10)
 
 ## Resource mapping
 
 To allow more expressive resource requests we map some simple names to the SGE options and resources. These can be used for example in `cluster.yaml` to make the configuration simpler to read.
 
+### Notes
 
-| SGE Option       | Accepted YAML key names                   |
+Custom SGE resources can be specified in `__resources__` only in the profile folder (i.e. any `__resources__` in a local `--cluster-config cluster.yaml` will be ignored, but you can request the resources defined in the global profile). Custom resources are specified as a YAML dictionary where the key is the resource name as defined in SGE and the values are any aliases you want to use for this resource. The key will always be avaiable as a name even if you don't specifiy it as an alias. If a key already exists in the resource list the the aliases are just appended to that resource. 
+
+For example:
+
+```
+__resources__:
+  coproc_v100: 
+    - "gpu"
+    - "nvidia_gpu"
+```
+
+Allows you to request with `coproc_v100=1`, `gpu=1` or `nvidia_gpu=1` in the cluster config files or snakemake rule resources all of which will actually set `-j coproc_v100=1` for qsub.
+
+Memory (`s_vmem`, `h_vmem` and aliases) must be given in gigabytes.
+
+A full list of the default supported SGE options and resource requests with their aliases is:
+
+
+| SGE Option       | Accepted aliases                   |
 | -----------------|-------------------------------------------| 
 | binding          | binding                                   |
 | cwd              | cwd,                                      |
