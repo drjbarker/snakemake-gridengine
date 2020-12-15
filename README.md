@@ -36,7 +36,7 @@ Arguments are overridden in the following order, aliases are also defined and ca
 4) Profile `cluster_config` file <rulename> entries
 5) `--cluster-config` parsed to Snakemake (deprecated since Snakemake 5.10)
 
-## Resource mapping
+## Resource and option mapping
 
 To allow more expressive resource requests we map some simple names to the SGE options and resources. These can be used for example in `cluster.yaml` to make the configuration simpler to read.
 
@@ -56,6 +56,19 @@ __resources__:
 Allows you to request with `coproc_v100=1`, `gpu=1` or `nvidia_gpu=1` in the cluster config files or snakemake rule resources all of which will actually set `-j coproc_v100=1` for qsub.
 
 Memory (`s_vmem`, `h_vmem` and aliases) must be given in gigabytes.
+
+
+Custom SGE options can be specified in `__options__` in the profile folder in the same way as resources.  
+
+For example:
+
+```
+__options__:
+  jc: 
+    - "jc"
+    - "job_class"
+```
+
 
 A full list of the default supported SGE options and resource requests with their aliases is:
 
