@@ -3,6 +3,12 @@ __resources__:
     - "gpu"
     - "nvidia_gpu"
 
+__options__:
+  jc:
+    - "jc"
+    - "jclass"
+    - "job_class"
+
 __default__:
   join: yes
   output: logs/sge/snakejob.{rulename}.{jobid}.log
