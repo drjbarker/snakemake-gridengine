@@ -53,7 +53,7 @@ __resources__:
     - "nvidia_gpu"
 ```
 
-Allows you to request with `coproc_v100=1`, `gpu=1` or `nvidia_gpu=1` in the cluster config files or snakemake rule resources all of which will actually set `-j coproc_v100=1` for qsub.
+Allows you to request with `coproc_v100=1`, `gpu=1` or `nvidia_gpu=1` in the cluster config files or snakemake rule resources all of which will actually set `-l coproc_v100=1` for qsub.
 
 Memory (`s_vmem`, `h_vmem` and aliases) must be given in gigabytes.
 
