@@ -27,6 +27,25 @@ Then, you can run Snakemake with
 ### Default snakemake arguments
 Default arguments to ``snakemake`` maybe adjusted in the ``<profile path>/config.yaml`` file.
 
+### Cluster Files
+
+Per rule configuration can be defined in a cluster file and passed in using --cluser-config. This is a yaml file where the key is the rule name followed by a list of SGE settings to add or override settings set in the _profile_. You can also add options to the `__default__` config. **NOTE that these are _ADDED_ to the default and will be inheritted by any named rules.**
+
+An example local cluster config file (`cluster.yaml`) looks like:
+
+```
+__default__
+	q: private.q
+	
+rule1:
+	gpu:1
+	
+rule2:
+	time: "4:0:0"
+```
+
+which will be used by specifying `snakemake --profile sge --cluster-config cluster.yaml`.
+
 ## Parsing arguments to SGE (qsub)
 Arguments are overridden in the following order, aliases are also defined and can be defined :
 
