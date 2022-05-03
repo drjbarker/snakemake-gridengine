@@ -78,6 +78,11 @@ RESOURCE_MAPPING = {
     "h_fsize"          : ("h_fsize", "file_size"),
 }
 
+# Snakemake 7 and newer add a 'tmpdir' default resource but it is usually
+# not requestable in grid engine, hence we must make it explicitly
+# non-requestable.
+NONREQUESTABLE_RESOURCES = ["tmpdir"]
+
 def add_custom_resources(resources, resource_mapping=RESOURCE_MAPPING):
     """Adds new resources to resource_mapping.
 
@@ -210,6 +215,12 @@ def sge_resource_string(key, val):
 
 def submit_job(jobscript, qsub_settings):
     """Submit jobscript and return jobid."""
+
+    # remove any non-requestable resources which have been added as complex resouces
+    for resource in list(qsub_settings["resources"].keys()):
+      if resource in NONREQUESTABLE_RESOURCES:
+        del qsub_settings["resources"][resource]
+
     flatten = lambda l: [item for sublist in l for item in sublist]
     batch_options = flatten([sge_option_string(k,v).split() for k, v in qsub_settings["options"].items()])
     batch_resources = flatten([sge_resource_string(k, v).split() for k, v in qsub_settings["resources"].items()])
