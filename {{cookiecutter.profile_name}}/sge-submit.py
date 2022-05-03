@@ -232,9 +232,8 @@ job_properties = read_job_properties(jobscript)
 # load the default cluster config
 cluster_config = load_cluster_config(CLUSTER_CONFIG)
 
-add_custom_resources(cluster_config["__resources__"])
-
-add_custom_options(cluster_config["__options__"])
+if "__resources__" in cluster_config:
+    add_custom_resources(cluster_config["__resources__"])
 
 # qsub default arguments
 update_double_dict(qsub_settings, parse_qsub_settings(parse_qsub_defaults(QSUB_DEFAULTS)))
