@@ -103,26 +103,6 @@ def add_custom_resources(resources, resource_mapping=RESOURCE_MAPPING):
             if val != key:
                 resource_mapping[key] += (val,)
 
-def add_custom_options(options, option_mapping=OPTION_MAPPING):
-    """Adds new options to option_mapping.
-
-       options -> dict where key is sge option name and value is a single name
-                  or a list of names to be used as aliased
-    """
-    for key, val in options.items():
-        if key not in option_mapping:
-            option_mapping[key] = tuple()
-
-        # make sure the option name itself is an alias
-        option_mapping[key] += (key,)
-        if isinstance(val, list):
-            for alias in val:
-                if val != key:
-                    option_mapping[key] += (alias,)
-        else:
-            if val != key:
-                option_mapping[key] += (val,)
-
 def parse_jobscript():
     """Minimal CLI to require/only accept single positional argument."""
     p = argparse.ArgumentParser(description="SGE snakemake submit script")
