@@ -73,9 +73,11 @@ RESOURCE_MAPPING = {
     # default host resources
     "slots"            : ("slots",),
     "s_vmem"           : ("s_vmem", "soft_memory", "soft_virtual_memory"),
-    "h_vmem"           : ("h_vmem", "mem", "memory", "virtual_memory"),
+    # "mem_mb" is a default snakemake resource name which will be passed in
+    "h_vmem"           : ("h_vmem", "mem_mb", "mem", "memory", "virtual_memory"),
     "s_fsize"          : ("s_fsize", "soft_file_size"),
-    "h_fsize"          : ("h_fsize", "file_size"),
+    # "disk_mb" is a default snakemake resource name which will be passed in
+    "h_fsize"          : ("h_fsize", "disk_mb", "file_size"),
 }
 
 # Snakemake 7 and newer add a 'tmpdir' default resource but it is usually
@@ -138,9 +140,12 @@ def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mappin
                 found = True
                 # Snakemake resources can only be defined as integers, but SGE interprets
                 # plain integers for memory as bytes. This hack means we interpret memory
-                # requests as gigabytes
+                # requests as megabytes which maps to the snakemake resources "mem_mb"
+                # and "disk_mb".
                 if (rkey == 's_vmem') or (rkey == 'h_vmem'):
-                    job_options["resources"].update({rkey : str(sval) + 'G'})
+                    job_options["resources"].update({rkey : str(sval) + 'M'})
+                elif (rkey == 's_fsize') or (rkey == 'h_fsize'):
+                    job_options["resources"].update({rkey : str(sval) + 'M'})
                 else:
                     job_options["resources"].update({rkey : sval})
                 break

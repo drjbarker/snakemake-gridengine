@@ -74,7 +74,7 @@ __resources__:
 
 Allows you to request with `coproc_v100=1`, `gpu=1` or `nvidia_gpu=1` in the cluster config files or snakemake rule resources all of which will actually set `-l coproc_v100=1` for qsub.
 
-Memory (`s_vmem`, `h_vmem` and aliases) must be given in gigabytes.
+Memory (`s_vmem`, `h_vmem` and aliases) must be given in **megabytes** (NOTE: this is to support snakemake version >= 7 which sets a default `mem_mb` resource. In older versions of the grid engine profile the memory was in gigabytes).
 
 
 Custom SGE options can be specified in `__options__` in the profile folder in the same way as resources.  
@@ -92,49 +92,53 @@ __options__:
 A full list of the default supported SGE options and resource requests with their aliases is:
 
 
-| SGE Option       | Accepted aliases                   |
-| -----------------|-------------------------------------------| 
-| binding          | binding                                   |
-| cwd              | cwd,                                      |
-| e                | e, error                                  |
-| hard             | hard,                                     |
-| j                | j, join                                   |
-| m                | m, mail_options                           |
-| M                | M, email                                  |
-| notify           | notify,                                   |
-| now              | now,                                      |
-| N                | N, name                                   |
-| o                | o, output                                 |
-| P                | P, project                                |
-| p                | p, priority                               |
-| pe               | pe, parallel_environment                  |
-| pty              | pty,                                      |
-| q                | q, queue                                  |
-| R                | R, reservation                            |
-| r                | r, rerun                                  |
-| soft             | soft,                                     |
-| v                | v, variable                               | 
-| V                | V, export_env                             |
-| qname            | qname,                                    |
-| hostname         | hostname,                                 |
-| calendar         | calendar,                                 |
-| min_cpu_interval | min_cpu_interval,                         |
-| tmpdir           | tmpdir,                                   |
-| seq_no           | seq_no,                                   |
-| s_rt             | s_rt, soft_runtime, soft_walltime         |
-| h_rt             | h_rt, time, runtime, walltime             |
-| s_cpu            | s_cpu, soft_cpu                           |
-| h_cpu            | h_cpu, cpu                                |
-| s_data           | s_data, soft_data                         |
-| h_data           | h_data, data                              |
-| s_stack          | s_stack, soft_stack                       |
-| h_stack          | h_stack, stack                            |           
-| s_core           | s_core, soft_core                         |
-| h_core           | h_core, core                              |
-| s_rss            | s_rss, soft_resident_set_size             |
-| h_rss            | h_rss, resident_set_size                  |
-| slots            | slots,                                    |
-| s_vmem           | s_vmem, soft_memory,  soft_virtual_memory | 
-| h_vmem           | h_vmem, mem, memory,  virtual_memory      | 
-| s_fsize          | s_fsize, soft_file_size                   |
-| h_fsize          | h_fsize, file_size                        |
+| SGE Option       | Accepted aliases                             |
+| -----------------|----------------------------------------------| 
+| binding          | binding                                      |
+| cwd              | cwd,                                         |
+| e                | e, error                                     |
+| hard             | hard,                                        |
+| j                | j, join                                      |
+| m                | m, mail_options                              |
+| M                | M, email                                     |
+| notify           | notify,                                      |
+| now              | now,                                         |
+| N                | N, name                                      |
+| o                | o, output                                    |
+| P                | P, project                                   |
+| p                | p, priority                                  |
+| pe               | pe, parallel_environment                     |
+| pty              | pty,                                         |
+| q                | q, queue                                     |
+| R                | R, reservation                               |
+| r                | r, rerun                                     |
+| soft             | soft,                                        |
+| v                | v, variable                                  | 
+| V                | V, export_env                                |
+| qname            | qname,                                       |
+| hostname         | hostname,                                    |
+| calendar         | calendar,                                    |
+| min_cpu_interval | min_cpu_interval,                            |
+| tmpdir           | tmpdir,                                      |
+| seq_no           | seq_no,                                      |
+| s_rt             | s_rt, soft_runtime, soft_walltime            |
+| h_rt             | h_rt, time, runtime, walltime                |
+| s_cpu            | s_cpu, soft_cpu                              |
+| h_cpu            | h_cpu, cpu                                   |
+| s_data           | s_data, soft_data                            |
+| h_data           | h_data, data                                 |
+| s_stack          | s_stack, soft_stack                          |
+| h_stack          | h_stack, stack                               |           
+| s_core           | s_core, soft_core                            |
+| h_core           | h_core, core                                 |
+| s_rss            | s_rss, soft_resident_set_size                |
+| h_rss            | h_rss, resident_set_size                     |
+| slots            | slots,                                       |
+| s_vmem           | s_vmem, soft_memory,  soft_virtual_memory    | 
+| h_vmem           | h_vmem, mem_mb, mem, memory,  virtual_memory | 
+| s_fsize          | s_fsize, soft_file_size                      |
+| h_fsize          | h_fsize, disk_mb, file_size                  |
+
+## Non Requestable Resources
+
+On some cluster configurations some resources may be non-requestable. 
