@@ -80,9 +80,8 @@ RESOURCE_MAPPING = {
     "h_fsize"          : ("h_fsize", "disk_mb", "file_size"),
 }
 
-# Snakemake 7 and newer add a 'tmpdir' default resource but it is usually
-# not requestable in grid engine, hence we must make it explicitly
-# non-requestable.
+IGNORED_RESOURCES = ["mem_mib", "disk_mib"]
+
 NONREQUESTABLE_RESOURCES = ["tmpdir"]
 
 def add_custom_resources(resources, resource_mapping=RESOURCE_MAPPING):
@@ -127,7 +126,9 @@ def parse_qsub_defaults(parsed):
 def format_job_properties(string):
     # we use 'rulename' rather than 'rule' for consistency with the --cluster-config 
     # snakemake option
-    return string.format(rulename=job_properties['rule'], jobid=job_properties['jobid'])
+    if job_properties['type'] == 'group':
+      return string.format(rulename='snakejob', jobid=job_properties['jobid'])
+    return string.format(rulename='snakejob', jobid=job_properties['jobid'])
 
 
 def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mapping=OPTION_MAPPING):
@@ -136,6 +137,9 @@ def parse_qsub_settings(source, resource_mapping=RESOURCE_MAPPING, option_mappin
     for skey, sval in source.items():
         found = False
         for rkey, rval in resource_mapping.items():
+            if skey in IGNORED_RESOURCES:
+                found = True
+                break
             if skey in rval:
                 found = True
                 # Snakemake resources can only be defined as integers, but SGE interprets
@@ -201,7 +205,8 @@ def sge_resource_string(key, val):
 def submit_job(jobscript, qsub_settings):
     """Submit jobscript and return jobid."""
 
-    # remove any non-requestable resources which have been added as complex resouces
+    # remove any non-requestable resources which have somehow been added to
+    # the resource list
     for resource in list(qsub_settings["resources"].keys()):
       if resource in NONREQUESTABLE_RESOURCES:
         del qsub_settings["resources"][resource]
